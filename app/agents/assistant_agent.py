@@ -1,6 +1,5 @@
 from tools import wiki_search, current_time, generate_image, generate_image_from_image, get_imago_info
 from langgraph.prebuilt import create_react_agent
-from langgraph.checkpoint.memory import MemorySaver
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
 from dotenv import load_dotenv
@@ -28,6 +27,4 @@ model = ChatOpenAI(
     api_key=SecretStr(api_key) if api_key else None,
 )
 tools = [wiki_search, current_time, generate_image, generate_image_from_image, get_imago_info]
-memory = MemorySaver()
-print(memory)
-agent_executor = create_react_agent(model, tools, checkpointer=memory)
+agent_executor = create_react_agent(model, tools)

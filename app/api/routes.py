@@ -1,14 +1,17 @@
-from langchain_core.messages import HumanMessage, SystemMessage
-from pydantic import BaseModel
-from typing import Optional
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from agents.assistant_agent import agent_executor, system_prompt
+from pydantic import BaseModel
+from typing import Optional, List
 from fastapi import APIRouter
+
+class ChatHistoryItem(BaseModel):
+    sender : str
+    content : str
 
 class MessageInput(BaseModel):
     input : str
     image : Optional[str] = None
-    thread_id : str
-
+    history : Optional[List[ChatHistoryItem]] = [] 
 
 router = APIRouter()
 
@@ -23,6 +26,14 @@ def chat(msg: MessageInput):
     image_url=msg.image
     response_text = ""
 
+    history_messages = []
+    if msg.history:
+        for m in msg.history:
+            if m.sender == "user":
+                history_messages.append(HumanMessage(content=m.content))
+            elif m.sender == "assistant":
+                history_messages.append(AIMessage(content=m.content))
+
     try:
         full_input = user_input
 
@@ -30,15 +41,15 @@ def chat(msg: MessageInput):
         if image_url:
             full_input += f"\n[Image URL: {image_url}]"
             
+        history_messages.append(HumanMessage(content=full_input))
 
         for chunk in agent_executor.stream(
         {
             "messages": [
-                HumanMessage(content=full_input),
+                *history_messages,
                 SystemMessage(content=system_prompt),
             ]
-        },
-            config={"configurable": {"thread_id": msg.thread_id}}
+        }
         ):
             if "agent" in chunk and "messages" in chunk["agent"]:
                 for message in chunk["agent"]["messages"]:
