@@ -7,6 +7,7 @@ from fastapi import APIRouter
 class MessageInput(BaseModel):
     input : str
     image : Optional[str] = None
+    thread_id : str
 
 
 router = APIRouter()
@@ -36,7 +37,8 @@ def chat(msg: MessageInput):
                 HumanMessage(content=full_input),
                 SystemMessage(content=system_prompt),
             ]
-        }
+        },
+            config={"configurable": {"thread_id": msg.thread_id}}
         ):
             if "agent" in chunk and "messages" in chunk["agent"]:
                 for message in chunk["agent"]["messages"]:
