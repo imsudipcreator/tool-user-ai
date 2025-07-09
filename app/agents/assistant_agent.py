@@ -1,8 +1,8 @@
+from tools import wiki_search, current_time, generate_image, generate_image_from_image, get_imago_info
 from langgraph.prebuilt import create_react_agent
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
 from dotenv import load_dotenv
-from tools import wiki_search, current_time, generate_image, generate_image_from_image
 import os
 
 
@@ -20,11 +20,11 @@ if not api_key:
     raise ValueError("GROQ_API_KEY environment variable is required")
 
 
+#creating the agent
 model = ChatOpenAI(
     model="qwen-qwq-32b",
     base_url="https://api.groq.com/openai/v1",
     api_key=SecretStr(api_key) if api_key else None,
 )
-
-tools = [wiki_search, current_time, generate_image, generate_image_from_image]
+tools = [wiki_search, current_time, generate_image, generate_image_from_image, get_imago_info]
 agent_executor = create_react_agent(model, tools)
