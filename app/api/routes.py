@@ -13,7 +13,7 @@ class ChatHistoryItem(BaseModel):
 class MessageInput(BaseModel):
     input: str = "Hi"
     image: Optional[str] = ""
-    model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4"]
+    model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4"] = "imi1"
     history: Optional[List[ChatHistoryItem]] = []
     custom_prompt: Optional[str] = ""
     persona: Optional[str] = ""
@@ -42,7 +42,7 @@ def chat(msg: MessageInput):
         user_input=msg.input,
         image_url=msg.image,
         history_messages=history_messages,
-        model="imi1",
+        model=msg.model,
     )
     result = assistant_response(data=assistant_input)
     # print(result)
