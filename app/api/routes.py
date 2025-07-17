@@ -16,7 +16,7 @@ class MessageInput(BaseModel):
     model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4"] = "imi1"
     history: Optional[List[ChatHistoryItem]] = []
     custom_prompt: Optional[str] = ""
-    persona: Optional[str] = ""
+    persona: Optional[str] = "Default"
 
 
 router = APIRouter()
@@ -43,6 +43,8 @@ def chat(msg: MessageInput):
         image_url=msg.image,
         history_messages=history_messages,
         model=msg.model,
+        custom_prompt=msg.custom_prompt,
+        persona=msg.persona
     )
     result = assistant_response(data=assistant_input)
     # print(result)
