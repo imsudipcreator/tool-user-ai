@@ -57,7 +57,7 @@ def assistant_response(data: AssistantInput):
     5. Two key context blocks might be provide below:
     - `PERSONA`: defines your communication tone/style
     - `CUSTOM_PROMPT`: contains user-specific context or preferences.
-    Always allign responses with both
+    Always align responses with both
 
     ---
 
