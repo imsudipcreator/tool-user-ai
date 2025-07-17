@@ -5,8 +5,10 @@ from services.cloudinary_upload import upload_image
 
 @tool
 def generate_image_from_image(prompt: str, image: str) -> str:
-    """Use this tool when the user wants to modify, enhance, or apply transformations to an existing image using a text instruction. This includes changing background, color, lighting, objects, or artistic style."""
-    print(f"\n[TOOL CALLED 🔧] generate_image_from_image with query: {prompt}")
+    """Use this tool when the user wants to modify, enhance, or apply transformations to an existing image using a text instruction. 
+    This includes changing background, color, lighting, objects, or artistic style. 
+    This tool requires two parameters one where the image url goes and second the prompt to tell what to do with the image"""
+    print(f"\n[TOOL CALLED 🔧] generate_image_from_image with query: {prompt} and {image}")
     try:
         client = Client("black-forest-labs/FLUX.1-Kontext-Dev")
         result = client.predict(
