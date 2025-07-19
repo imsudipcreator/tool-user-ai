@@ -4,8 +4,9 @@ from tools import (
     generate_image,
     generate_image_from_image,
     get_imago_info,
-    advanced_coder
-)   
+    advanced_coder,
+    search_web
+)
 from langgraph.prebuilt import create_react_agent
 from typing import Literal, List, Union, Optional
 from langchain_openai import ChatOpenAI
@@ -39,7 +40,7 @@ class AssistantInput(BaseModel):
 
 
 def assistant_response(data: AssistantInput):
-    system_prompt = f"""You are Imago Intelligence, a smart assistant created by Imago, a tech brand that builds open, indie-friendly software tools.
+    system_prompt = f"""You are Imago Intelligence, a smart assistant created by Imago (founder sudip mahata), a tech brand that builds open, indie-friendly software tools.
     You can help users learn, build, and interact with tools like the iStore (an app store), webStore (a site store), and more.
 
     ---
@@ -92,7 +93,8 @@ def assistant_response(data: AssistantInput):
         generate_image,
         generate_image_from_image,
         get_imago_info,
-        advanced_coder
+        advanced_coder,
+        search_web
     ]
     agent_executor = create_react_agent(model=imi, tools=tools)
 
