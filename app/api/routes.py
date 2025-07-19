@@ -1,7 +1,9 @@
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from agents.assistant_agent import assistant_response, AssistantInput
-from pydantic import BaseModel
+from agents.image_gen_agent import image_gen_response
+from agents.async_image_gen_agent import async_image_gen_response
 from typing import Optional, List, Literal
+from pydantic import BaseModel
 from fastapi import APIRouter
 
 
@@ -17,6 +19,11 @@ class MessageInput(BaseModel):
     history: Optional[List[ChatHistoryItem]] = []
     custom_prompt: Optional[str] = ""
     persona: Optional[str] = "Default"
+
+
+
+class ImageGenInput(BaseModel):
+    prompt: str = "Generate an image of a dog"
 
 
 router = APIRouter()
@@ -49,3 +56,18 @@ def chat(msg: MessageInput):
     result = assistant_response(data=assistant_input)
     # print(result)
     return result
+
+
+
+@router.post("/generate/image")
+def generate_image(input : str):
+    result = image_gen_response(prompt=input)
+
+    return result
+
+
+@router.post("/generate/image/async")
+def generate_image_async(input : str):
+    result = async_image_gen_response(prompt=input)
+    return result
+
