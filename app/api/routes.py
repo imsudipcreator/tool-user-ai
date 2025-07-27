@@ -5,6 +5,7 @@ from agents.async_image_gen_agent import async_image_gen_response
 from typing import Optional, List, Literal
 from pydantic import BaseModel
 from fastapi import APIRouter
+from agents.code_gen_agent import CodeAgentInput, code_agent_response
 
 
 class ChatHistoryItem(BaseModel):
@@ -19,7 +20,6 @@ class MessageInput(BaseModel):
     history: Optional[List[ChatHistoryItem]] = []
     custom_prompt: Optional[str] = ""
     persona: Optional[str] = "Default"
-
 
 
 class ImageGenInput(BaseModel):
@@ -51,23 +51,27 @@ def chat(msg: MessageInput):
         history_messages=history_messages,
         model=msg.model,
         custom_prompt=msg.custom_prompt,
-        persona=msg.persona
+        persona=msg.persona,
     )
     result = assistant_response(data=assistant_input)
     # print(result)
     return result
 
 
-
 @router.post("/generate/image")
-def generate_image(input : str):
+def generate_image(input: str):
     result = image_gen_response(prompt=input)
 
     return result
 
 
 @router.post("/generate/image/async")
-def generate_image_async(input : str):
+def generate_image_async(input: str):
     result = async_image_gen_response(prompt=input)
     return result
 
+
+@router.post("/generate/code")
+def generate_code(input: CodeAgentInput):
+    result = code_agent_response(input)
+    return result
