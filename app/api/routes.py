@@ -16,7 +16,7 @@ class ChatHistoryItem(BaseModel):
 class MessageInput(BaseModel):
     input: str = "Hi"
     image: Optional[str] = ""
-    model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4"] = "imi1"
+    model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4", "imioss", "imiossc"] = "imiossc"
     history: Optional[List[ChatHistoryItem]] = []
     custom_prompt: Optional[str] = ""
     persona: Optional[str] = "Default"

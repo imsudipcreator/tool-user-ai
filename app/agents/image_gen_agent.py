@@ -15,75 +15,91 @@ class ImageGenResponse(TypedDict):
 
 def image_gen_response(prompt: str) -> ImageGenResponse:
     try:
-        client = Client("black-forest-labs/FLUX.1-dev")
+        client = Client("Qwen/Qwen-Image")
         result = client.predict(
-            prompt,
+            prompt="Shakespeare's Hamlet: Beautiful Ophelia in ornate princess dress, riding on a modern metro looking out the window at the sunset, with wired ear buds.Style is high-detail, hyper-realistic, cinematic. It cannot be an illustration or a painting. Styled as: 만화경, 絵巻, wimmelbilder, 长卷, चित्रकथा, Polyptych, fully photoreal. Fish-eye lens without vignette or frame. Extreme-45°-angle Dutch tilt. Extreme close-up details blended into wide panoramic continuity. High-speed action.",
             seed=0,
             randomize_seed=True,
-            width=1024,
-            height=1024,
-            guidance_scale=3.5,
-            num_inference_steps=28,
+            aspect_ratio="9:16",
+            guidance_scale=4,
+            num_inference_steps=50,
+            prompt_enhance=True,
             api_name="/infer",
         )
         print(result)
         image_path = result[0]
-
-    except Exception as e1:
-        print("[Flux.1-dev failed]", e1)
-
+    except Exception as e:
+        print("[Qwen-Image failed]", e)
         try:
-            image_path = cloudflare_image_gen(prompt)
-            print(image_path)
-        except Exception as e2:
-            print("[FLUX.1-schnell/cloudflare failed]", e2)
+            client = Client("black-forest-labs/FLUX.1-dev")
+            result = client.predict(
+                prompt,
+                seed=0,
+                randomize_seed=True,
+                width=1024,
+                height=1024,
+                guidance_scale=3.5,
+                num_inference_steps=28,
+                api_name="/infer",
+            )
+            print(result)
+            image_path = result[0]
+
+        except Exception as e1:
+            print("[Flux.1-dev failed]", e1)
 
             try:
-                client = Client("black-forest-labs/FLUX.1-schnell")
-                result = client.predict(
-                    prompt,
-                    seed=0,
-                    randomize_seed=True,
-                    width=1024,
-                    height=1024,
-                    num_inference_steps=20,
-                    api_name="/infer",
-                )
-                print(result)
-                image_path = result[0]
-            except Exception as e3:
-                print("[FLUX.1-schnell failed]", e3)
+                image_path = cloudflare_image_gen(prompt)
+                print(image_path)
+            except Exception as e2:
+                print("[FLUX.1-schnell/cloudflare failed]", e2)
 
                 try:
-                    client = Client("NihalGazi/FLUX-Pro-Unlimited")
+                    client = Client("black-forest-labs/FLUX.1-schnell")
                     result = client.predict(
                         prompt,
-                        width=1280,
-                        height=1280,
                         seed=0,
-                        randomize=True,
-                        server_choice="Google US Server",
-                        api_name="/generate_image",
+                        randomize_seed=True,
+                        width=1024,
+                        height=1024,
+                        num_inference_steps=20,
+                        api_name="/infer",
                     )
                     print(result)
                     image_path = result[0]
-                except Exception as e4:
-                    print("[NihalGazi/FLUX-Pro-Unlimited failed]", e4)
+                except Exception as e3:
+                    print("[FLUX.1-schnell failed]", e3)
 
                     try:
-                        client = Client("stabilityai/stable-diffusion")
+                        client = Client("NihalGazi/FLUX-Pro-Unlimited")
                         result = client.predict(
-                            prompt, negative="", scale=9, api_name="/infer"
+                            prompt,
+                            width=1280,
+                            height=1280,
+                            seed=0,
+                            randomize=True,
+                            server_choice="Google US Server",
+                            api_name="/generate_image",
                         )
                         print(result)
-                        image_path = result[0]["image"]
+                        image_path = result[0]
                     except Exception as e4:
-                        print("[stable-diffusion failed]", e4)
-                        return {
-                            "image_url" : "",
-                            "type" : "error",
-                            "log" : "All image generation services are currently unavailable."
-                        }
+                        print("[NihalGazi/FLUX-Pro-Unlimited failed]", e4)
+
+                        try:
+                            client = Client("stabilityai/stable-diffusion")
+                            result = client.predict(
+                                prompt, negative="", scale=9, api_name="/infer"
+                            )
+                            print(result)
+                            image_path = result[0]["image"]
+                        except Exception as e4:
+                            print("[stable-diffusion failed]", e4)
+                            return {
+                                "image_url": "",
+                                "type": "error",
+                                "log": "All image generation services are currently unavailable.",
+                            }
 
     if not image_path:
         return {

@@ -21,9 +21,9 @@ def async_image_gen_response(prompt: str) -> ImageGenResponse:
 
     payload = {
         "prompt": prompt,
-        "params": {"n": 1, "width": 512, "height": 512, "steps": 20, "cfg_scale": 7},
-        "nsfw": False,
-        "censor_nsfw": True,
+        "params": {"n": 1, "width": 512, "height": 512, "steps": 30, "cfg_scale": 7},
+        "nsfw": True,
+        "censor_nsfw": False,
     }
     response = requests.post(ENDPOINT, headers=headers, json=payload)
     response.raise_for_status()

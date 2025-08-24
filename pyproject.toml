@@ -9,6 +9,7 @@ dependencies = [
     "ddgs>=9.3.1",
     "fastapi>=0.115.14",
     "gradio-client>=1.10.4",
+    "groq>=0.31.0",
     "langchain>=0.3.26",
     "langchain-community>=0.3.27",
     "langchain-openai>=0.3.27",

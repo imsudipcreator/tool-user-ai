@@ -27,6 +27,8 @@ MODEL_MAP = {
     "imi2c": "deepseek-r1-distill-llama-70b",
     "imi3": "meta-llama/llama-4-scout-17b-16e-instruct",
     "imi4": "moonshotai/kimi-k2-instruct",
+    "imioss": "openai/gpt-oss-20b",
+    "imiossc": "openai/gpt-oss-120b",
 }
 
 
@@ -34,7 +36,7 @@ class AssistantInput(BaseModel):
     user_input: str
     image_url: Optional[str] = None
     history_messages: List[Union[HumanMessage, AIMessage]]
-    model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4"] = "imi1"
+    model: Literal["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4", "imioss", "imiossc"] = "imioss"
     persona: Optional[str] = ""
     custom_prompt: Optional[str] = ""
 
